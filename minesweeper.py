@@ -46,11 +46,11 @@ class Minesweeper:
         self.labels = {
             "time": Label(self.frame, text = "00:00:00"),
             "mines": Label(self.frame, text = "Mines: 0"),
-            "flags": Label(self.frame, text = "Flags: 0")
+           # "flags": Label(self.frame, text = "Flags: 0")
         }
-        self.labels["time"].grid(row = 0, column = 0, columnspan = SIZE_Y) # top full width
-        self.labels["mines"].grid(row = SIZE_X+1, column = 0, columnspan = int(SIZE_Y/2)) # bottom left
-        self.labels["flags"].grid(row = SIZE_X+1, column = int(SIZE_Y/2-1), columnspan = int(SIZE_Y/2)) # bottom right
+        self.labels["time"].grid(row = 0, column = 0, columnspan = int(SIZE_Y/2)) # top full width
+        self.labels["mines"].grid(row = 0, column = int(SIZE_Y/2), columnspan = int(SIZE_Y/2)) # bottom left
+        #self.labels["flags"].grid(row = SIZE_X+1, column = int(SIZE_Y/2-1), columnspan = int(SIZE_Y/2)) # bottom right
 
         self.restart() # start game
         self.updateTimer() # init timer
@@ -112,7 +112,7 @@ class Minesweeper:
         self.refreshLabels()
 
     def refreshLabels(self):
-        self.labels["flags"].config(text = "Flags: "+str(self.flagCount))
+       # self.labels["flags"].config(text = "Flags: "+str(self.flagCount))
         self.labels["mines"].config(text = "Mines: "+str(self.mines))
 
     def gameOver(self, won):
