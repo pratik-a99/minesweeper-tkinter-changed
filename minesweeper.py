@@ -1,4 +1,4 @@
-# Python Version 2.7.3
+# Python Version 3.8
 # File: minesweeper.py
 
 from tkinter import *
@@ -11,6 +11,7 @@ from datetime import time, date, datetime
 
 SIZE_X = 10
 SIZE_Y = 10
+MINES = 10  # new change - added mine count
 
 STATE_DEFAULT = 0
 STATE_CLICKED = 1
@@ -64,7 +65,8 @@ class Minesweeper:
 
         # create buttons
         self.tiles = dict({})
-        self.mines = 0
+        self.mines = MINES # self.mines is equal to the preset number of mines now
+        self.mine_count = 0 # new change
         for x in range(0, SIZE_X):
             for y in range(0, SIZE_Y):
                 if y == 0:
@@ -75,11 +77,12 @@ class Minesweeper:
 
                 # tile image changeable for debug reasons:
                 gfx = self.images["plain"]
-
-                # currently random amount of mines
-                if random.uniform(0.0, 1.0) < 0.1:
+                
+                # Need to change this to scatter the preset amount of mines
+                if random.uniform(0.0, 1.0) < 0.1 and self.mines != 0:
                     isMine = True
-                    self.mines += 1
+                    self.mines -= 1
+                    self.mine_count +=1
 
                 tile = {
                     "id": id,
@@ -113,7 +116,7 @@ class Minesweeper:
 
     def refreshLabels(self):
        # self.labels["flags"].config(text = "Flags: "+str(self.flagCount))
-        self.labels["mines"].config(text = "Mines: "+str(self.mines))
+        self.labels["mines"].config(text = "Mines: "+str(self.mine_count))
 
     def gameOver(self, won):
         for x in range(0, SIZE_X):
@@ -240,7 +243,33 @@ class Minesweeper:
         self.clickedCount += 1
 
 ### END OF CLASSES ###
+def set_skill_level(skill):
+    global SIZE_X, SIZE_Y, MINES
+    if skill == 1:
+        SIZE_X = 9
+        SIZE_Y = 9
+        MINES = 10
+    elif skill == 2:
+        SIZE_X = 16
+        SIZE_Y = 16
+        MINES = 40
+    else:
+        SIZE_X = 16
+        SIZE_Y = 30
+        MINES = 99
+    window.destroy()
+    
+def skill_select():
+    global window
+    window = Tk()
+    window.geometry("300x90")
 
+    Label(window, text="Choose your skill level").place(x=75, y=20)
+    Button(window, text="Beginner", command= lambda: set_skill_level(1)).place(x=30, y=50)
+    Button(window, text="Intermediate", command= lambda: set_skill_level(2)).place(x=110, y=50)
+    Button(window, text="Expert", command= lambda: set_skill_level(3)).place(x=210, y=50)
+    window.mainloop()
+    
 def main():
     # create Tk instance
     window = Tk()
@@ -252,4 +281,5 @@ def main():
     window.mainloop()
 
 if __name__ == "__main__":
+    skill_select()
     main()
