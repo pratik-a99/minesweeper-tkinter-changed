@@ -4,14 +4,14 @@
 from tkinter import *
 from tkinter import messagebox as tkMessageBox
 from collections import deque
-import random
+import numpy as np
 import platform
 import time
 from datetime import time, date, datetime
 
 SIZE_X = 10
 SIZE_Y = 10
-MINES = 10  # new change - added mine count
+MINES = 10  
 
 STATE_DEFAULT = 0
 STATE_CLICKED = 1
@@ -62,7 +62,7 @@ class Minesweeper:
         self.correctFlagCount = 0
         self.clickedCount = 0
         self.startTime = None
-
+                
         # create buttons
         self.tiles = dict({})
         self.mines = MINES # self.mines is equal to the preset number of mines now
@@ -77,12 +77,6 @@ class Minesweeper:
 
                 # tile image changeable for debug reasons:
                 gfx = self.images["plain"]
-                
-                # Need to change this to scatter the preset amount of mines
-                if random.uniform(0.0, 1.0) < 0.1 and self.mines != 0:
-                    isMine = True
-                    self.mines -= 1
-                    self.mine_count +=1
 
                 tile = {
                     "id": id,
@@ -101,6 +95,13 @@ class Minesweeper:
                 tile["button"].grid( row = x+1, column = y ) # offset by 1 row for timer
 
                 self.tiles[x][y] = tile
+                
+        while self.mine_count < self.mines:
+            a = np.random.randint(0, SIZE_X)
+            b = np.random.randint(0, SIZE_Y)
+            if self.tiles[a][b]["isMine"] == False:
+                self.tiles[a][b]["isMine"] = True
+                self.mine_count += 1
 
         # loop again to find nearby mines and display number on tile
         for x in range(0, SIZE_X):
@@ -246,17 +247,20 @@ class Minesweeper:
 def set_skill_level(skill):
     global SIZE_X, SIZE_Y, MINES
     if skill == 1:
-        SIZE_X = 9
-        SIZE_Y = 9
+        SIZE_X = 10
+        SIZE_Y = 10
         MINES = 10
+       
     elif skill == 2:
         SIZE_X = 16
         SIZE_Y = 16
         MINES = 40
+     
     else:
         SIZE_X = 16
         SIZE_Y = 30
         MINES = 99
+     
     window.destroy()
     
 def skill_select():
