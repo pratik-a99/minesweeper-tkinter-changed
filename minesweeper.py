@@ -11,7 +11,7 @@ from datetime import time, date, datetime
 
 SIZE_X = 10
 SIZE_Y = 10
-#MINES = 10  # new change - added mine count
+MINES = 10  
 
 STATE_DEFAULT = 0
 STATE_CLICKED = 1
@@ -62,20 +62,13 @@ class Minesweeper:
         self.correctFlagCount = 0
         self.clickedCount = 0
         self.startTime = None
-        
-        
-           
-            
-
+                
         # create buttons
         self.tiles = dict({})
         self.mines = MINES # self.mines is equal to the preset number of mines now
         self.mine_count = 0 # new change
         for x in range(0, SIZE_X):
             for y in range(0, SIZE_Y):
-            
-                i = 0;
-            	
                 if y == 0:
                     self.tiles[x] = {}
 
@@ -84,25 +77,6 @@ class Minesweeper:
 
                 # tile image changeable for debug reasons:
                 gfx = self.images["plain"]
-                
-                m = self.mines
-                
-                random = np.random.uniform(0,SIZE_X,SIZE_X*SIZE_Y)
-                
-                if SIZE_X == 10:
-                	PER = 1
-                elif SIZE_X == 16:
-                	PER = 3
-                else:
-                	PER = 2    
-                
-                # Need to change this to scatter the preset amount of mines
-                if random[i] < PER and self.mines != 0:
-                    isMine = True
-                    self.mines -= 1
-                    self.mine_count +=1
-                    print(self.mines)
-               
 
                 tile = {
                     "id": id,
@@ -122,7 +96,12 @@ class Minesweeper:
 
                 self.tiles[x][y] = tile
                 
-                i = i+1
+        while self.mine_count < self.mines:
+            a = np.random.randint(0, SIZE_X)
+            b = np.random.randint(0, SIZE_Y)
+            if self.tiles[a][b]["isMine"] == False:
+                self.tiles[a][b]["isMine"] = True
+                self.mine_count += 1
 
         # loop again to find nearby mines and display number on tile
         for x in range(0, SIZE_X):
